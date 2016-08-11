@@ -175,9 +175,10 @@ function show_search()
 	if (iFsearch == undefined || iFsearch == "")
 		return;
 
-	if (selectedText == '')
+	if (selectedText == '') {
+		hide('mataSearch');
 		return;
-
+	}
 	var url = iFsearch.replace("%s", selectedText);
 	
 	if (document.getElementById('mataSearch'))
@@ -210,12 +211,13 @@ function hide_frame(event)
 	var y = event.y;
 	
 	var div = document.getElementById('mataDiv');
-	if (div == null)
+	if (div == null || window.getComputedStyle(div).visibility == 'none') {
+		hide('mataLink');
 		return;
+	}
 	
 	if (x < div.offsetLeft || x > div.offsetLeft + div.offsetWidth ||
 		 y < document.getElementById('mataMover').offsetTop || y > document.getElementById('mataSizer'))  {
-		hide('mataLink');
 		hide('mataDiv');
 	}
 }
@@ -395,5 +397,14 @@ function loadSettings() {
 	});
 }
 
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+	// Escape key
+    if (evt.keyCode == 27) {
+		hide('mataLink');
+		hide('mataSearch');
+        hide('mataDiv');
+    }
+};
+
 loadSettings();
-//showIFrame();

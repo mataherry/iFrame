@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "iFrame Extension",
-    "description": "Preview any link in a popup iframe",
-    "version": "0.7",
+    "description": "Preview any link and search any text in a popup iframe",
+    "version": "0.8",
     "background": {
         "scripts": [
             "script.js"
