@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>iFrame Options</title>
+  <style>	
+	#wrapper {
+		  margin: auto;
+		  width: 200px;
+		  font-size: 10pt;
+		  font-family: arial;
+	}
+  </style>
+ </head>
+ <body>
+
+	<div id="wrapper">
+	<center><h2 style="background-color:silver">iFrame Options</h2></center>
+	
+      <p>
+        <input name="chkEnable" id="chkEnable" checked="true" type="checkbox"></input>
+        <label for="chkEnable">Enable</label>
+      </p>
+      <p>
+		Activate with key:<br>
+        <input name="chkCtrl" id="chkCtrl" checked="true" type="checkbox"></input>
+        <label for="chkCtrl">Ctrl</label>
+		<input name="chkAlt" id="chkAlt" checked="true" type="checkbox"></input>
+        <label for="chkAlt">Alt</label>
+		<input name="chkShift" id="chkShift" checked="true" type="checkbox"></input>
+        <label for="chkShift">Shift</label>
+      </p>
+      <p>
+        <input name="chkBox" id="chkBox" checked="true" type="checkbox"></input>
+        <label for="chkBox">Tiny Box</label>
+      </p>
+	  <p>
+        Custom size <small>(e.g: 50%, 200px)<br/>
+		Width <input name="txtWidth" id="txtWidth" value="" type="text" style="font-size:10px" size="5" align="right"></input>
+		Height <input name="txtHeight" id="txtHeight" value="" type="text" style="font-size:10px" size="5" align="right"></input>
+		</small>
+      </p>
+	  <p>
+        Custom position <small>(e.g: 50%, 200px)<br/>
+		Top <input name="txtTop" id="txtTop" value="" type="text" style="margin-left:5px;font-size:10px" size="5" align="right"></input>
+		Bottom <input name="txtBottom" id="txtBottom" value="" type="text" style="font-size:10px" size="5" align="right"></input><br/>
+		Left <input name="txtLeft" id="txtLeft" value="" type="text" style="margin-left:6px;font-size:10px" size="5" align="right"></input>
+		Right <input name="txtRight" id="txtRight" value="" type="text" style="margin-left:9px;font-size:10px" size="5" align="right"></input>
+		</small>
+      </p>
+	  <p>
+        Default Search Text<br/>
+		<input name="txtSearch" id="txtSearch" value="" type="text" style="font-size:10px" size="30"></input>
+      </p>
+	  <button id="save">Save</button>
+		<div id="status"></div>
+	</div>
+ </body>
+ <script src="options.js"></script>
+</html>
