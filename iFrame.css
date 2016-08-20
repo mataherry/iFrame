@@ -1,0 +1,56 @@
+#mataLink, #mataSearch {
+    background: white; 
+    height: 6px; 
+    width: 6px; 
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    box-sizing: content-box;
+    cursor: zoom-in;
+}
+
+#mataDiv {
+    background-color: white;
+    border-style: solid;
+    border-width: 3px;
+    border-color: black;
+    display: flex;
+    flex-direction: column;
+}
+
+#mataMover {
+    background-color: black;
+    height: 16px;
+    width: 100%;
+    cursor: move;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: black; 
+}
+
+#mataMover a:link, #mataMover a:visited, #mataMover p {
+    font-family: sans-serif;
+    font-size: 11px;
+    color: white;
+    background-color: coral;
+    text-decoration: none;
+    padding: 1px 6px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#mataFrame {
+    flex: 1;
+    border: 0;
+}
+
+#mataSizer {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    bottom: -5px;
+    right: -5px;
+    background-color: none;
+    cursor: nw-resize;
+    z-index: 10000;
+}

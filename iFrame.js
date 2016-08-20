@@ -11,11 +11,11 @@ var iFctrl = false;
 var iFalt = false;
 var iFshift = false;
 var iFbox = true;
-var iFwidth = ' ';
-var iFheight = ' ';
+var iFwidth = '';
+var iFheight = '';
 var iFtop = '5%';
-var iFbottom = ' ';
-var iFleft = ' ';
+var iFbottom = '';
+var iFleft = '';
 var iFright = '5%';
 var iFsearch = 'https://www.duckduckgo.com/?q=%s';
 
@@ -31,7 +31,7 @@ function showIFrame() {
 			if (iFbox)
 				show_link(this);
 			else
-				show_div(this);
+				show_mataDiv(this);
 		};
 	}
 }
@@ -44,37 +44,53 @@ function show_link(url) {
 	else
 	{
 		var div = document.createElement('div');
+		div.setAttribute('id', 'mataLink');
 		document.body.insertBefore(div, document.body.firstChild);
 	}
 	var x = findPosX(url) + url.offsetWidth + 3;
 	var y = findPosY(url) - 3;
-	div.setAttribute('ID', 'mataLink');
 	div.setAttribute('scrolling', 'auto');
-	div.setAttribute('style', 'background:skyblue; position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999; height: 7px; width: 7px; border-style: solid; border-width:2px');
+	div.setAttribute('style', 'position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999;');
 	div.onclick = function() {
 		hide('mataLink');
-		show_div(url);
+		show_mataDiv(url);
 	};
 	
 }
 
-function show_div(url) {
-	if (document.getElementById('mataFrame'))
+function show_mataDiv(url) {
+	if (document.getElementById('mataDiv'))
 	{
 		mDiv = document.getElementById('mataDiv');
 		mFrame = document.getElementById('mataFrame');
-		mMover = document.createElement('div');
-		mSizer = document.createElement('div');
+		mMover = document.getElementById('mataMover');
+		mSizer = document.getElementById('mataSizer');
 	}
 	else
 	{
-		var mFrame = document.createElement('iFrame');
 		var mDiv = document.createElement('div');
+		var mFrame = document.createElement('iFrame');		
 		var mMover = document.createElement('div');
 		var mSizer = document.createElement('div');
-		mDiv.appendChild(mFrame);
 		mDiv.appendChild(mMover);
+		mDiv.appendChild(mFrame);
 		mDiv.appendChild(mSizer);
+		document.body.insertBefore(mDiv, document.body.firstChild);
+		
+		mDiv.setAttribute('ID', 'mataDiv');
+		mDiv.setAttribute('scrolling', 'auto');
+	
+		mFrame.setAttribute('ID', 'mataFrame');
+		mMover.setAttribute('ID', 'mataMover');
+		mSizer.setAttribute('ID', 'mataSizer');
+		
+		mMover.onmousedown = function() {
+			dragStart(event,'mataDiv','move');
+		};
+		
+		mSizer.onmousedown = function() {
+			dragStart(event,'mataDiv','resize');
+		};
 	}
 	
 	var size = '';
@@ -133,33 +149,17 @@ function show_div(url) {
 		position += 'top:' + y + 'px;';
 	}
 	
-	mDiv.setAttribute('ID', 'mataDiv');
-	mDiv.setAttribute('scrolling', 'auto');
-	mDiv.setAttribute('style', 'background-color:white;position: fixed;' + position + ';z-Index: 9999;' + size + ';border-style: solid');
-	document.body.insertBefore(mDiv, document.body.firstChild);
+	mDiv.setAttribute('style', 'position: fixed;' + position + ';z-Index: 9999;' + size + ';');
 	
-	mFrame.setAttribute('ID', 'mataFrame');
 	mFrame.setAttribute('src', url);
-	mFrame.setAttribute('style', 'position:absolute;width:100%;height:100%;border:0');
 
-	mMover.setAttribute('ID', 'mataMover');
-	mMover.setAttribute('style', 'position: absolute;height:10px;width:100%;top:-10px;left:-3px;background-color:black;border-left-style:solid;border-right-style:solid;cursor:move');
-
-	mSizer.setAttribute('ID', 'mataSizer');
-	mSizer.setAttribute('style', 'position: absolute;height:10px;width:10px;bottom:-5px;right:-5px;background-color:none;cursor:nw-resize;z-Index:10000');	
-	
-	mMover.onmousedown = function() {
-		dragStart(event,'mataDiv','move');
-	};
-	
-	mSizer.onmousedown = function() {
-		dragStart(event,'mataDiv','resize');
-	};
+	mMover.innerHTML="<p onclick=\"window.open('" + url + "', '_blank')\" style='float:left'>Open in New Tab</a>";
+	mMover.innerHTML+="<p onclick=\"document.getElementById('mataDiv').setAttribute('style', 'display: none');\" style='float:right'>X</p>";	
 }
 
-document.onmouseup = show_search;
+document.onmouseup = show_mataSearch;
 
-function show_search()
+function show_mataSearch()
 {
 	var t = '';
 	if(window.getSelection){
@@ -176,6 +176,7 @@ function show_search()
 		return;
 
 	if (selectedText == '') {
+		hide('mataLink');
 		hide('mataSearch');
 		return;
 	}
@@ -188,17 +189,17 @@ function show_search()
 	else
 	{
 		var div = document.createElement('div');
+		div.setAttribute('ID', 'mataSearch');
+		div.setAttribute('scrolling', 'auto');
 		document.body.insertBefore(div, document.body.firstChild);
 	}
 	var offset = selectedText.getRangeAt(0).getBoundingClientRect();
 	var x = offset.right + 5;
 	var y = offset.top + window.pageYOffset - 5;
-	div.setAttribute('ID', 'mataSearch');
-	div.setAttribute('scrolling', 'auto');
-	div.setAttribute('style', 'background:skyblue; position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999; height: 7px; width: 7px; border-style: solid; border-width:2px');
+	div.setAttribute('style', 'position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999;');
 	div.onclick = function() {
 		hide('mataSearch');
-		show_div(url);
+		show_mataDiv(url);
 	};
 	document.body.insertBefore(div, document.body.firstChild);
 }
@@ -219,6 +220,7 @@ function hide_frame(event)
 	if (x < div.offsetLeft || x > div.offsetLeft + div.offsetWidth ||
 		 y < document.getElementById('mataMover').offsetTop || y > document.getElementById('mataSizer'))  {
 		hide('mataDiv');
+		document.getElementById('mataFrame').src = 'about:blank';
 	}
 }
 
@@ -269,6 +271,13 @@ function findPosY(obj)
 	}
 	return curtop;
 }
+
+//*****************************************************************************
+// Do not remove this notice.
+//
+// Copyright 2001 by Mike Hall.
+// See http://www.brainjar.com for terms of use.
+//*****************************************************************************
 
 // Global object to hold drag information.
 var dragObj = new Object();
@@ -404,7 +413,14 @@ document.onkeydown = function(evt) {
 		hide('mataLink');
 		hide('mataSearch');
         hide('mataDiv');
+		document.getElementById('mataFrame').src = 'about:blank';
     }
 };
 
 loadSettings();
+
+var style = document.createElement('link');
+style.rel = 'stylesheet';
+style.type = 'text/css';
+style.href = chrome.extension.getURL('iFrame.css');
+(document.head||document.documentElement).appendChild(style);

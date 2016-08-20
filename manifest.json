@@ -1,13 +1,14 @@
 {
     "manifest_version": 2,
-    "name": "iFrame Extension",
-    "description": "Preview any link and search any text in a popup iframe",
+    "name": "iFrame - Link Review",
+    "description": "Preview any link and search any text in a popup iFrame",
     "version": "0.8",
     "background": {
         "scripts": [
             "script.js"
         ]
     },
+    "web_accessible_resources": ["iFrame.css"],
     "icons": {
         "16": "icon_16.png",
         "48": "icon_48.png",
