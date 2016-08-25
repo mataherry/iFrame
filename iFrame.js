@@ -19,41 +19,46 @@ var iFleft = '';
 var iFright = '5%';
 var iFsearch = 'https://www.duckduckgo.com/?q=%s';
 
-function showIFrame() {
-	var links = document.getElementsByTagName("a");
-	for(var i = 0; i<links.length; i++) {	
-		links[i].onmouseover = function() {
-			if (!iFenable) return;
-			if (iFctrl && window.event.ctrlKey != 1) return;
-			if (iFalt && window.event.altKey != 1) return;
-			if (iFshift && window.event.shiftKey != 1) return;
+function showIFrame(e) {
+	if (e == null || e.target == null) return;
+	
+	var target = getLinkElement(e.target);
+	
+	if (target != null) {
 
-			if (iFbox)
-				show_link(this);
-			else
-				show_mataDiv(this);
-		};
+		if (!iFenable) return;
+		if (iFctrl && window.event.ctrlKey != 1) return;
+		if (iFalt && window.event.altKey != 1) return;
+		if (iFshift && window.event.shiftKey != 1) return;
+
+		if (iFbox)
+			show_mataBox(target);
+		else
+			show_mataDiv(target);
 	}
 }
 
-function show_link(url) {
-	if (document.getElementById('mataLink'))
+function show_mataBox(linkEl) {
+	if (document.getElementById('mataBox'))
 	{
-		div = document.getElementById('mataLink');
+		div = document.getElementById('mataBox');
 	}
 	else
 	{
 		var div = document.createElement('div');
-		div.setAttribute('id', 'mataLink');
+		div.setAttribute('id', 'mataBox');
 		document.body.insertBefore(div, document.body.firstChild);
 	}
-	var x = findPosX(url) + url.offsetWidth + 3;
-	var y = findPosY(url) - 3;
-	div.setAttribute('scrolling', 'auto');
-	div.setAttribute('style', 'position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999;');
+	var rect = getOffsetRect(linkEl);
+	var x = rect.left + linkEl.offsetWidth + 3;
+	var y = rect.top - 3;
+	if(y < 0) y = 0;
+	
+	//div.setAttribute('scrolling', 'auto');
+	div.setAttribute('style', 'position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 99999;');
 	div.onclick = function() {
-		hide('mataLink');
-		show_mataDiv(url);
+		hideElementById('mataBox');
+		show_mataDiv(linkEl.href);
 	};
 	
 }
@@ -99,7 +104,6 @@ function show_mataDiv(url) {
 	var h = window.innerHeight * 0.9;
 	var w = window.innerWidth / 2 * 0.9;
 	
-	//var x = findPosX(url) + url.offsetWidth;
 	var x = window.innerWidth / 2.0;
 	var y = window.innerHeight * 0.05;
 	
@@ -157,10 +161,13 @@ function show_mataDiv(url) {
 	mMover.innerHTML+="<p onclick=\"document.getElementById('mataDiv').setAttribute('style', 'display: none');\" style='float:right'>X</p>";	
 }
 
-document.onmouseup = show_mataSearch;
-
 function show_mataSearch()
 {
+	if (!iFenable) return;
+	if (iFctrl && window.event.ctrlKey != 1) return;
+	if (iFalt && window.event.altKey != 1) return;
+	if (iFshift && window.event.shiftKey != 1) return;
+
 	var t = '';
 	if(window.getSelection){
 		t = window.getSelection();
@@ -176,8 +183,8 @@ function show_mataSearch()
 		return;
 
 	if (selectedText == '') {
-		hide('mataLink');
-		hide('mataSearch');
+		hideElementById('mataBox');
+		hideElementById('mataSearch');
 		return;
 	}
 	var url = iFsearch.replace("%s", selectedText);
@@ -198,33 +205,30 @@ function show_mataSearch()
 	var y = offset.top + window.pageYOffset - 5;
 	div.setAttribute('style', 'position: absolute; left:'+x+'px; top:'+y+'px; z-Index: 999;');
 	div.onclick = function() {
-		hide('mataSearch');
+		hideElementById('mataSearch');
 		show_mataDiv(url);
 	};
-	document.body.insertBefore(div, document.body.firstChild);
 }
 
-window.addEventListener("click", hide_frame, true);
-
-function hide_frame(event)
+function hide_mataDivs(event)
 {
 	var x = event.x;
 	var y = event.y;
 	
 	var div = document.getElementById('mataDiv');
 	if (div == null || window.getComputedStyle(div).visibility == 'none') {
-		hide('mataLink');
+		hideElementById('mataBox');
 		return;
 	}
 	
 	if (x < div.offsetLeft || x > div.offsetLeft + div.offsetWidth ||
 		 y < document.getElementById('mataMover').offsetTop || y > document.getElementById('mataSizer'))  {
-		hide('mataDiv');
+		hideElementById('mataDiv');
 		document.getElementById('mataFrame').src = 'about:blank';
 	}
 }
 
-function hide(element) 
+function hideElementById(element) 
 {
 	var div = document.getElementById(element);
 	if (div)
@@ -233,43 +237,36 @@ function hide(element)
 	}
 }
 
-function findPosX(obj)
-{
-	var curleft = 0;
-	if(obj.offsetParent)
-	{
-		while(1) 
-		{
-			curleft += obj.offsetLeft;
-			if(!obj.offsetParent)
-				break;
-			obj = obj.offsetParent;
+function getLinkElement(t) {
+	var el = t;
+	do {
+		if (el.tagName != null && el.tagName.toLowerCase() === "a") {
+			if (el.getAttribute("href") == "#")
+				return null;
+			return el;
 		}
-	}
-	else if(obj.x)
-	{
-		curleft += obj.x;
-	}
-	return curleft;
+	} while (el = el.parentNode);
+
+	return null;
 }
 
-function findPosY(obj)
-{
-	var curtop = 0;
-	if(obj.offsetParent)
-	{	while(1)
-	{
-		curtop += obj.offsetTop;
-		if(!obj.offsetParent)
-			break;
-		obj = obj.offsetParent;
-	}
-	}
-	else if(obj.y) 
-	{
-		curtop += obj.y;
-	}
-	return curtop;
+// Source: http://javascript.info/tutorial/coordinates
+function getOffsetRect(el) {
+    var box = el.getBoundingClientRect();
+     
+    var body = document.body;
+    var docEl = document.documentElement;
+     
+    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+     
+    var clientTop = docEl.clientTop || body.clientTop || 0;
+    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+     
+    var top  = box.top +  scrollTop - clientTop;
+    var left = box.left + scrollLeft - clientLeft;
+     
+    return { top: Math.round(top), left: Math.round(left) };
 }
 
 //*****************************************************************************
@@ -402,25 +399,22 @@ function loadSettings() {
 			iFright = settings.iFright;
 			iFsearch = settings.iFsearch;
 		}
-		showIFrame();
 	});
 }
+
+loadSettings();
+
+document.addEventListener('mousemove', showIFrame);
+document.onmouseup = show_mataSearch;
+window.addEventListener("click", hide_mataDivs, true);
 
 document.onkeydown = function(evt) {
     evt = evt || window.event;
 	// Escape key
     if (evt.keyCode == 27) {
-		hide('mataLink');
-		hide('mataSearch');
-        hide('mataDiv');
+		hideElementById('mataBox');
+		hideElementById('mataSearch');
+        hideElementById('mataDiv');
 		document.getElementById('mataFrame').src = 'about:blank';
     }
 };
-
-loadSettings();
-
-var style = document.createElement('link');
-style.rel = 'stylesheet';
-style.type = 'text/css';
-style.href = chrome.extension.getURL('iFrame.css');
-(document.head||document.documentElement).appendChild(style);

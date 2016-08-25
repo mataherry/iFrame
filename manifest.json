@@ -1,21 +1,22 @@
 {
     "manifest_version": 2,
-    "name": "iFrame - Link Review",
+    "name": "iFrame - Link Viewer",
     "description": "Preview any link and search any text in a popup iFrame",
     "version": "0.8",
-    "background": {
-        "scripts": [
-            "script.js"
-        ]
-    },
-    "web_accessible_resources": ["iFrame.css"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["iFrame.js"],
+            "css": ["iFrame.css"]
+        }
+    ],
     "icons": {
         "16": "icon_16.png",
         "48": "icon_48.png",
         "128": "icon_128.png"
     },
     "permissions": [
-        "storage", "webNavigation", "tabs", "http://*/*", "https://*/*"
+        "storage", "webNavigation", "tabs"
     ],
     "options_page": "options.html",
     "browser_action": {

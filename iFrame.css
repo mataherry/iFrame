@@ -1,4 +1,4 @@
-#mataLink, #mataSearch {
+#mataBox, #mataSearch {
     background: white; 
     height: 6px; 
     width: 6px; 
@@ -22,19 +22,18 @@
     background-color: black;
     height: 16px;
     width: 100%;
+    display: inline-block;
     cursor: move;
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: black; 
 }
 
-#mataMover a:link, #mataMover a:visited, #mataMover p {
+#mataMover p {
     font-family: sans-serif;
     font-size: 11px;
     color: white;
     background-color: coral;
-    text-decoration: none;
+    clear: none;
     padding: 1px 6px;
+    margin: 0;
     line-height: 1;
     cursor: pointer;
 }
